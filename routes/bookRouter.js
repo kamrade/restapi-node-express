@@ -25,6 +25,7 @@ var routes = function(Book) {
 			});
 		});
 
+	// middleware
 	bookRouter.use('/:bookId', function(req, res, next) {
 		Book.findById(req.params.bookId, function(err, book) {
 			if(err) {
@@ -68,6 +69,15 @@ var routes = function(Book) {
 				} else {
 					res.json(req.book);
 				} 
+			});
+		})
+		.delete(function(req, res) {
+			req.book.remove(function(err) {
+				if(err) {
+					res.status(500).send(err);
+				} else {
+					res.status(204).send('Removed');
+				}
 			});
 		});
 
