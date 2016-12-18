@@ -3,27 +3,11 @@ var express = require('express');
 
 var routes = function(Book) {
 	var bookRouter = express.Router();
-	
+	var bookController = require('../controllers/bookController')(Book);
+
 	bookRouter.route('/')
-		.post((req, res) => {
-			// console.log(req.body);
-			var book = new Book(req.body);
-
-			book.save();
-			console.log('record added');
-			res.status(201).send(book);
-		})
-
-		.get((req, res) => {
-			// var responseJSON = { hello: 'this is API' };
-			// res.json(responseJSON);
-			var query = req.query;
-
-			Book.find(query, (err, books) => {
-				if(err) res.status(500).send(err)
-				else res.json(books);
-			});
-		});
+		.post(bookController.post)
+		.get(bookController.get);
 
 	// middleware
 	bookRouter.use('/:bookId', function(req, res, next) {
@@ -53,7 +37,7 @@ var routes = function(Book) {
 					res.status(500).send(err);
 				} else {
 					res.json(req.book);
-				} 
+				}
 			});
 		})
 		.patch(function(req, res) {
@@ -68,7 +52,7 @@ var routes = function(Book) {
 					res.status(500).send(err);
 				} else {
 					res.json(req.book);
-				} 
+				}
 			});
 		})
 		.delete(function(req, res) {
